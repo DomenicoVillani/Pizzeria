@@ -4,128 +4,131 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 using Pizzeria.Models;
 
 namespace Pizzeria.Controllers
 {
-    public class OrdiniController : Controller
+    public class OrdArtsController : Controller
     {
         private DBContext db = new DBContext();
 
-        // GET: Ordini
+        // GET: OrdArts
         [Authorize(Roles = "Amministratore")]
         public ActionResult Index()
         {
-            var ordini = db.Ordini.Include(o => o.Users);
-            return View(ordini.ToList());
+            var ordArt = db.OrdArt.Include(o => o.Articoli).Include(o => o.Ordini);
+            return View(ordArt.ToList());
         }
 
-        // GET: Ordini/Details/5
+        // GET: OrdArts/Details/5
         [Authorize(Roles = "Cliente , Amministratore")]
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? orderId)
         {
-            if (id == null)
+
+            if (orderId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
+            var ordArt = db.OrdArt.Where(u => u.Ordine_ID == orderId).ToList();
+            if (ordArt == null)
             {
                 return HttpNotFound();
             }
-            return View(ordini);
+            return View(ordArt);
         }
 
-        // GET: Ordini/Create
+        // GET: OrdArts/Create
         [Authorize(Roles = "Cliente , Amministratore")]
         public ActionResult Create()
         {
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome");
+            ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome");
+            ViewBag.Ordine_ID = new SelectList(db.Ordini, "Ordine_ID", "Indirizzo");
             return View();
         }
 
-        // POST: Ordini/Create
+        // POST: OrdArts/Create
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Cliente , Amministratore")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        [Authorize(Roles = "Cliente , Amministratore")]
+        public ActionResult Create([Bind(Include = "Articolo_ID,Ordine_ID,Quantita")] OrdArt ordArt)
         {
             if (ModelState.IsValid)
             {
-                db.Ordini.Add(ordini);
+                db.OrdArt.Add(ordArt);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+            ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome", ordArt.Articolo_ID);
+            ViewBag.Ordine_ID = new SelectList(db.Ordini, "Ordine_ID", "Indirizzo", ordArt.Ordine_ID);
+            return View(ordArt);
         }
 
-        // GET: Ordini/Edit/5
-        [Authorize(Roles = "Amministratore")]
+        // GET: OrdArts/Edit/5
+        [Authorize(Roles = "Cliente , Amministratore")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
+            OrdArt ordArt = db.OrdArt.Find(id);
+            if (ordArt == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+            ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome", ordArt.Articolo_ID);
+            ViewBag.Ordine_ID = new SelectList(db.Ordini, "Ordine_ID", "Indirizzo", ordArt.Ordine_ID);
+            return View(ordArt);
         }
 
-        // POST: Ordini/Edit/5
+        // POST: OrdArts/Edit/5
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Amministratore")]
-        public ActionResult Edit([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        [Authorize(Roles = "Cliente , Amministratore")]
+        public ActionResult Edit([Bind(Include = "Articolo_ID,Ordine_ID,Quantita")] OrdArt ordArt)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ordini).State = EntityState.Modified;
+                db.Entry(ordArt).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+            ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome", ordArt.Articolo_ID);
+            ViewBag.Ordine_ID = new SelectList(db.Ordini, "Ordine_ID", "Indirizzo", ordArt.Ordine_ID);
+            return View(ordArt);
         }
 
-        // GET: Ordini/Delete/5
-        [Authorize(Roles = "Amministratore")]
+        // GET: OrdArts/Delete/5
+        [Authorize(Roles = "Cliente , Amministratore")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
+            OrdArt ordArt = db.OrdArt.Find(id);
+            if (ordArt == null)
             {
                 return HttpNotFound();
             }
-            return View(ordini);
+            return View(ordArt);
         }
 
-        // POST: Ordini/Delete/5
-        [Authorize(Roles = "Amministratore")]
+        // POST: OrdArts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cliente , Amministratore")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Ordini ordini = db.Ordini.Find(id);
-            db.Ordini.Remove(ordini);
+            OrdArt ordArt = db.OrdArt.Find(id);
+            db.OrdArt.Remove(ordArt);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

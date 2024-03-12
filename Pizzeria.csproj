@@ -163,8 +163,12 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\ArticoliController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrdArtsController.cs" />
     <Compile Include="Controllers\OrdiniController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -173,6 +177,7 @@
     <Compile Include="Models\DBContext.cs" />
     <Compile Include="Models\OrdArt.cs" />
     <Compile Include="Models\Ordini.cs" />
+    <Compile Include="Models\RoleManager.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -246,6 +251,22 @@
     <Content Include="Views\Ordini\Details.cshtml" />
     <Content Include="Views\Ordini\Edit.cshtml" />
     <Content Include="Views\Ordini\Index.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Articoli\Create.cshtml" />
+    <Content Include="Views\Articoli\Delete.cshtml" />
+    <Content Include="Views\Articoli\Details.cshtml" />
+    <Content Include="Views\Articoli\Edit.cshtml" />
+    <Content Include="Views\Articoli\Index.cshtml" />
+    <Content Include="Views\OrdArts\Create.cshtml" />
+    <Content Include="Views\OrdArts\Delete.cshtml" />
+    <Content Include="Views\OrdArts\Details.cshtml" />
+    <Content Include="Views\OrdArts\Edit.cshtml" />
+    <Content Include="Views\OrdArts\Index.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

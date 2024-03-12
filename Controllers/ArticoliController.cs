@@ -4,69 +4,65 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 using Pizzeria.Models;
 
 namespace Pizzeria.Controllers
 {
-    public class OrdiniController : Controller
+    public class ArticoliController : Controller
     {
         private DBContext db = new DBContext();
 
-        // GET: Ordini
-        [Authorize(Roles = "Amministratore")]
+        // GET: Articoli
+        
         public ActionResult Index()
         {
-            var ordini = db.Ordini.Include(o => o.Users);
-            return View(ordini.ToList());
+            return View(db.Articoli.ToList());
         }
 
-        // GET: Ordini/Details/5
-        [Authorize(Roles = "Cliente , Amministratore")]
+        // GET: Articoli/Details/5
+
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
+            Articoli articoli = db.Articoli.Find(id);
+            if (articoli == null)
             {
                 return HttpNotFound();
             }
-            return View(ordini);
+            return View(articoli);
         }
 
-        // GET: Ordini/Create
-        [Authorize(Roles = "Cliente , Amministratore")]
+        // GET: Articoli/Create
+        [Authorize(Roles = "Amministratore")]
         public ActionResult Create()
         {
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome");
             return View();
         }
 
-        // POST: Ordini/Create
+        // POST: Articoli/Create
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Cliente , Amministratore")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        [Authorize(Roles = "Amministratore")]
+        public ActionResult Create([Bind(Include = "Articolo_ID,Nome,Img,Prezzo,Tempo_Cons,Ingredienti")] Articoli articoli)
         {
             if (ModelState.IsValid)
             {
-                db.Ordini.Add(ordini);
+                db.Articoli.Add(articoli);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+            return View(articoli);
         }
 
-        // GET: Ordini/Edit/5
+        // GET: Articoli/Edit/5
         [Authorize(Roles = "Amministratore")]
         public ActionResult Edit(int? id)
         {
@@ -74,35 +70,32 @@ namespace Pizzeria.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
+            Articoli articoli = db.Articoli.Find(id);
+            if (articoli == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+            return View(articoli);
         }
 
-        // POST: Ordini/Edit/5
+        // POST: Articoli/Edit/5
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Amministratore")]
-        public ActionResult Edit([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        public ActionResult Edit([Bind(Include = "Articolo_ID,Nome,Img,Prezzo,Tempo_Cons,Ingredienti")] Articoli articoli)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(ordini).State = EntityState.Modified;
+                db.Entry(articoli).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+            return View(articoli);
         }
 
-        // GET: Ordini/Delete/5
+        // GET: Articoli/Delete/5
         [Authorize(Roles = "Amministratore")]
         public ActionResult Delete(int? id)
         {
@@ -110,22 +103,22 @@ namespace Pizzeria.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
-            if (ordini == null)
+            Articoli articoli = db.Articoli.Find(id);
+            if (articoli == null)
             {
                 return HttpNotFound();
             }
-            return View(ordini);
+            return View(articoli);
         }
 
-        // POST: Ordini/Delete/5
-        [Authorize(Roles = "Amministratore")]
+        // POST: Articoli/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Amministratore")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Ordini ordini = db.Ordini.Find(id);
-            db.Ordini.Remove(ordini);
+            Articoli articoli = db.Articoli.Find(id);
+            db.Articoli.Remove(articoli);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
