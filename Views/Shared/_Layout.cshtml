@@ -23,6 +23,17 @@
                     <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
+                <ul class="navbar-nav flex-grow-1">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Logout", "Logout", "Auth", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Login", "Login", "Auth", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+
+                </ul>
             </div>
         </div>
     </nav>
