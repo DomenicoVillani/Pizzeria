@@ -32,11 +32,9 @@ namespace Pizzeria.Controllers
             }
             var ordineWithArticoli = db.OrdArt
                 .Include(o => o.Ordini)
+                .Include(o => o.Ordini.Users)
                 .Include(o => o.Articoli)
                 .Where(o => o.Ordine_ID == id).ToList();
-
-            var ordDetails = db.Ordini.Where(o => o.Ordine_ID == id).FirstOrDefault();
-            TempData["orderDetails"] = ordDetails;
 
             if (ordineWithArticoli == null)
             {
@@ -69,16 +67,24 @@ namespace Pizzeria.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Amministratore,Cliente")]
+        [Authorize(Roles = "Cliente,Amministratore")]
         public ActionResult Create([Bind(Include = "Articolo_ID,Ordine_ID,Quantita")] OrdArt ordArt)
         {
+            var ControlloOrdine = db.OrdArt.Where(o => o.Articolo_ID == ordArt.Articolo_ID).FirstOrDefault();
             if (ModelState.IsValid)
             {
-                db.OrdArt.Add(ordArt);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ControlloOrdine == null)
+                {
+                    db.OrdArt.Add(ordArt);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ControlloOrdine.Quantita += ordArt.Quantita;
+                    db.Entry(ControlloOrdine).State = EntityState.Modified;
+                }
             }
-
             ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome", ordArt.Articolo_ID);
             ViewBag.Ordine_ID = new SelectList(db.Ordini, "Ordine_ID", "Indirizzo", ordArt.Ordine_ID);
             return View(ordArt);

@@ -1,4 +1,4 @@
-﻿@model Pizzeria.Models.Ordini
+﻿@model List<Pizzeria.Models.Ordini>
 
 @{
     ViewBag.Title = "Details";
@@ -6,45 +6,38 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>Ordini</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Users.Nome)
-        </dt>
+@foreach (var order in Model)
+{
+    <div>
+        <hr />
+        <h4>Ordine:  @Html.DisplayFor(model => order.Ordine_ID)</h4>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => order.Users.Nome)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => order.Users.Nome)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => order.Indirizzo)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => order.Indirizzo)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => order.Note)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => order.Note)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => order.CostoCons)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => order.CostoCons)
+            </dd>
+        </dl>
+    </div>
+    <a href="/OrdArts/Details/@order.Ordine_ID">DETTAGLI </a>
 
-        <dd>
-            @Html.DisplayFor(model => model.Users.Nome)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Indirizzo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Indirizzo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Note)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Note)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CostoCons)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CostoCons)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Ordine_ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+}

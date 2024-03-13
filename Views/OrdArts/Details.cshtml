@@ -1,39 +1,53 @@
-﻿﻿@model List<Pizzeria.Models.OrdArt>
+﻿@model List<Pizzeria.Models.OrdArt>
 
 @{
     ViewBag.Title = "Dettagli Ordine";
-    Pizzeria.Models.Ordini ordDetails = TempData["orderDetails"] as Pizzeria.Models.Ordini;
 }
 
 <h2>Dettagli Ordine</h2>
 
 
-<p><strong>Indirizzo:</strong>@ordDetails.Indirizzo</p>
-<p><strong>Note:</strong> @ordDetails.Note</p>
-<p><strong>Costo Cons:</strong> @ordDetails.CostoCons</p>
+<p><strong>Nome:</strong> @Model[0].Ordini.Users.Nome</p>
+<p><strong>Cognome:</strong> @Model[0].Ordini.Users.Cognome</p>
+<p><strong>Indirizzo:</strong> @Model[0].Ordini.Indirizzo</p>
+<p><strong>Note:</strong> @Model[0].Ordini.Note</p>
+<p><strong>Costo Consegna:</strong> @Model[0].Ordini.CostoCons</p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Articolo</th>
-            <th>Prezzo</th>
-            <th>Quantità</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var ordArt in Model)
-        {
+
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@ordArt.Articoli.Nome</td>
-                <td>@ordArt.Articoli.Prezzo</td>
-                <td>@ordArt.Quantita</td>
-                <td><a href="/OrdArts/Edit/@ordArt.Articolo_ID/@ordArt.Ordine_ID">Details</a></td>
+                <th>Articolo</th>
+                <th>Quantità</th>
+                <th>Prezzo</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Articoli.Nome</td>
+                    <td>@item.Quantita</td>
+                    <td>@item.Articoli.Prezzo</td>
+                </tr>
+            }
+            <tr>
 
-@*<p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.PrimaryKey */ }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>*@
+
+                <td colspan="2"><strong>Prezzo Totale:</strong></td>
+                <td>
+                    @(Model.Sum(item => (item.Articoli.Prezzo * item.Quantita)) + Model.FirstOrDefault().Ordini.CostoCons)
+                </td>
+
+
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Nessun articolo trovato per questo ordine.</p>
+}

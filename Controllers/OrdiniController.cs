@@ -27,11 +27,13 @@ namespace Pizzeria.Controllers
         [Authorize(Roles = "Cliente , Amministratore")]
         public ActionResult Details(int? id)
         {
+            var idInt = Convert.ToInt32(id);
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ordini ordini = db.Ordini.Find(id);
+            var ordini = db.Ordini
+                .Where(o => o.User_ID == idInt).ToList();
             if (ordini == null)
             {
                 return HttpNotFound();

@@ -12,17 +12,29 @@
 
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
-            @Html.ActionLink("Nome dell'applicazione", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("Pizzeria", "Index", "Articoli", new { area = "" }, new { @class = "navbar-brand" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
+                    @if (User.IsInRole("Amministratore"))
+                    {
+                        <li>@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Pizze", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+                    else if (User.IsInRole("Cliente"))
+                    {
+                        <li>@Html.ActionLink("Lista pizze", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Crea un ordine", "Create", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("I tuoi ordini", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link" })</li>
+                    }
                 </ul>
+                @if (User.IsInRole("Amministratore"))
+                {
+                    <p class="text-bg-warning">🏆🏆AMMINISTRATORE🏆🏆</p>
+                }
                 <ul class="navbar-nav flex-grow-1">
                     @if (User.Identity.IsAuthenticated)
                     {
