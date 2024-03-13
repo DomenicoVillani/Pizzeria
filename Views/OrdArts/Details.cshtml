@@ -1,34 +1,39 @@
-﻿@model Pizzeria.Models.OrdArt
+﻿﻿@model List<Pizzeria.Models.OrdArt>
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Dettagli Ordine";
+    Pizzeria.Models.Ordini ordDetails = TempData["orderDetails"] as Pizzeria.Models.Ordini;
 }
 
-<h2>Details</h2>
+<h2>Dettagli Ordine</h2>
 
-<div>
-    <h4>OrdArt</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Articoli.Nome)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Articoli.Nome)
-        </dd>
+<p><strong>Indirizzo:</strong>@ordDetails.Indirizzo</p>
+<p><strong>Note:</strong> @ordDetails.Note</p>
+<p><strong>Costo Cons:</strong> @ordDetails.CostoCons</p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Ordini.Indirizzo)
-        </dt>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Articolo</th>
+            <th>Prezzo</th>
+            <th>Quantità</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ordArt in Model)
+        {
+            <tr>
+                <td>@ordArt.Articoli.Nome</td>
+                <td>@ordArt.Articoli.Prezzo</td>
+                <td>@ordArt.Quantita</td>
+                <td><a href="/OrdArts/Edit/@ordArt.Articolo_ID/@ordArt.Ordine_ID">Details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-        <dd>
-            @Html.DisplayFor(model => model.Ordini.Indirizzo)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@*<p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@

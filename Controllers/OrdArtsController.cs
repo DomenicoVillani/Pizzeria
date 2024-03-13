@@ -23,24 +23,40 @@ namespace Pizzeria.Controllers
         }
 
         // GET: OrdArts/Details/5
-        [Authorize(Roles = "Cliente , Amministratore")]
-        public ActionResult Details(int? orderId)
+        [Authorize(Roles = "Amministratore,Cliente")]
+        public ActionResult Details(int? id)
         {
-
-            if (orderId == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var ordArt = db.OrdArt.Where(u => u.Ordine_ID == orderId).ToList();
-            if (ordArt == null)
+            var ordineWithArticoli = db.OrdArt
+                .Include(o => o.Ordini)
+                .Include(o => o.Articoli)
+                .Where(o => o.Ordine_ID == id).ToList();
+
+            var ordDetails = db.Ordini.Where(o => o.Ordine_ID == id).FirstOrDefault();
+            TempData["orderDetails"] = ordDetails;
+
+            if (ordineWithArticoli == null)
             {
                 return HttpNotFound();
             }
-            return View(ordArt);
+
+            return View(ordineWithArticoli);
+
+            //var ArtOrderId = db.OrdArt.Where(u => u.Ordine_ID == orderId).ToList();
+            //Ordini ordini = db.Ordini.Find(orderId);
+            //if (ArtOrderId == null || ordini == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //TempData["ordineDetails"] = ordini;
+            //return View(ArtOrderId);
         }
 
         // GET: OrdArts/Create
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Amministratore,Cliente")]
         public ActionResult Create()
         {
             ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome");
@@ -53,7 +69,7 @@ namespace Pizzeria.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Amministratore,Cliente")]
         public ActionResult Create([Bind(Include = "Articolo_ID,Ordine_ID,Quantita")] OrdArt ordArt)
         {
             if (ModelState.IsValid)
@@ -69,20 +85,36 @@ namespace Pizzeria.Controllers
         }
 
         // GET: OrdArts/Edit/5
-        [Authorize(Roles = "Cliente , Amministratore")]
-        public ActionResult Edit(int? id)
+        [Authorize(Roles = "Amministratore,Cliente")]
+        public ActionResult Edit(int? articoloId, int? ordineId)
         {
-            if (id == null)
+            // Verifica se gli ID sono nulli
+            if (articoloId == null || ordineId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OrdArt ordArt = db.OrdArt.Find(id);
+
+            // Eseguo una conversione dei valori nullable in tipi int
+            int articoloIdValue = articoloId.Value;
+            int ordineIdValue = ordineId.Value;
+
+            // Query per trovare l'ordArt corrispondente
+            OrdArt ordArt = db.OrdArt
+                .Include(o => o.Articoli)
+                .Where(o => o.Ordine_ID == ordineIdValue && o.Articolo_ID == articoloIdValue)
+                .FirstOrDefault();
+
+            // Se l'ordArt non è trovato, restituisci un errore 404
             if (ordArt == null)
             {
                 return HttpNotFound();
             }
+
+            // Popola i ViewBag per il dropdownlist
             ViewBag.Articolo_ID = new SelectList(db.Articoli, "Articolo_ID", "Nome", ordArt.Articolo_ID);
             ViewBag.Ordine_ID = new SelectList(db.Ordini, "Ordine_ID", "Indirizzo", ordArt.Ordine_ID);
+
+            // Ritorna la vista con l'ordArt trovato
             return View(ordArt);
         }
 
@@ -91,7 +123,7 @@ namespace Pizzeria.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Amministratore,Cliente")]
         public ActionResult Edit([Bind(Include = "Articolo_ID,Ordine_ID,Quantita")] OrdArt ordArt)
         {
             if (ModelState.IsValid)
@@ -106,7 +138,7 @@ namespace Pizzeria.Controllers
         }
 
         // GET: OrdArts/Delete/5
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Amministratore,Cliente")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -124,7 +156,7 @@ namespace Pizzeria.Controllers
         // POST: OrdArts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Amministratore,Cliente")]
         public ActionResult DeleteConfirmed(int id)
         {
             OrdArt ordArt = db.OrdArt.Find(id);
