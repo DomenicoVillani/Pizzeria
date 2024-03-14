@@ -1,0 +1,62 @@
+﻿@model Pizzeria.Models.OrdArt
+
+<h2>Carrello</h2>
+@if (ViewBag.UserCart != null && ViewBag.UserCart.Count > 0)
+{
+    <div class="d-flex justify-content-between">
+        <div>
+            <table>
+                <tr>
+                    <th>Nome</th>
+                    <th>Prezzo</th>
+                    <th>Quantità</th>
+                </tr>
+                @foreach (var item in ViewBag.UserCart)
+                {
+                    <tr>
+                        <td>@item.Articolo.Nome</td>
+                        <td>@item.Articolo.Prezzo €</td>
+                        <td>@item.Quantita</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div>
+            @using (Html.BeginForm("CreateOrderFromCart", "OrdArts", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4 class="my-2">Ordina</h4>
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Ordini.Indirizzo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Ordini.Indirizzo, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Ordini.Indirizzo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Ordini.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Ordini.Note, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Ordini.Note, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group my-2">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Conferma Ordine" class="btn btn-outline-success" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>Il carrello è vuoto</p>
+}

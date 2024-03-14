@@ -4,59 +4,85 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Pizze</h2>
 
 @if (User.IsInRole("Amministratore"))
 {
     <p>
         @Html.ActionLink("Aggiungi Articolo", "Create")
     </p>
-}
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nome)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Img)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Prezzo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Ingredienti)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
+    <table class="table">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Img)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prezzo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tempo_Cons)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ingredienti)
-            </td>
-            <td>
-                @if (User.IsInRole("Amministratore"))
-                {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Articolo_ID }) 
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Articolo_ID })
-                }
-                @Html.ActionLink("Details", "Details", new { id = item.Articolo_ID })
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Img)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prezzo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredienti)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Img)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prezzo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ingredienti)
+                </td>
+                <td>
+
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Articolo_ID })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Articolo_ID })
+                    @Html.ActionLink("Details", "Details", new { id = item.Articolo_ID })
+
+                </td>
+            </tr>
+
+
+        }
+
+    </table>
+}
+else
+{
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
+
+
+        @foreach (var item in Model)
+        {
+            <div class="col">
+
+
+                <div class="card">
+                    <img src=@item.Img class="card-img-top" alt="@item.Nome">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Nome</h5>
+                        <p class="card-text">@item.Prezzo €</p>
+                        <p class="card-text">@item.Ingredienti</p>
+                        @using (Html.BeginForm("AddToCart", "OrdArts", new { id = item.Articolo_ID }, FormMethod.Post))
+                        {
+                            <input class="btn btn-success rounded-pill" type="submit" value="Aggiungi all'ordine" />
+                        }
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+}

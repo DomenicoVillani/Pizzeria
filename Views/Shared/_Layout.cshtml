@@ -27,7 +27,7 @@
                     else if (User.IsInRole("Cliente"))
                     {
                         <li>@Html.ActionLink("Lista pizze", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Crea un ordine", "Create", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("🛒Carrello🛒", "Cart", "OrdArts", new { area = "" }, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("I tuoi ordini", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link" })</li>
                     }
                 </ul>

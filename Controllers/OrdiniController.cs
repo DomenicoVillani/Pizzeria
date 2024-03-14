@@ -53,15 +53,20 @@ namespace Pizzeria.Controllers
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Cliente,Amministratore")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
         {
             if (ModelState.IsValid)
             {
+                if (User.IsInRole("Cliente"))
+                {
+                    ordini.CostoCons = 4;
+                    ordini.User_ID = Convert.ToInt32(User.Identity.Name);
+                }
                 db.Ordini.Add(ordini);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Articoli");
             }
 
             ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
