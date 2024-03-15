@@ -22,7 +22,7 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Users/Details/5
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Cliente, Amministratore")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -38,7 +38,7 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Users/Create
-        [Authorize(Roles = "Cliente")]
+
         public ActionResult Create()
         {
             return View();
@@ -48,7 +48,7 @@ namespace Pizzeria.Controllers
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Cliente")]
+
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "User_ID,Nome,Cognome,Email,Password,Ruolo")] Users users)
         {
@@ -74,7 +74,7 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Users/Edit/5
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Cliente")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -94,7 +94,7 @@ namespace Pizzeria.Controllers
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Cliente, Amministratore")]
         public ActionResult Edit([Bind(Include = "User_ID,Nome,Cognome,Email,Password,Ruolo")] Users users)
         {
             if (ModelState.IsValid)
@@ -125,6 +125,7 @@ namespace Pizzeria.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cliente")]
         public ActionResult DeleteConfirmed(int id)
         {
             Users users = db.Users.Find(id);

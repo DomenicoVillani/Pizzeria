@@ -4,85 +4,99 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Pizze</h2>
-
-@if (User.IsInRole("Amministratore"))
-{
-    <p>
-        @Html.ActionLink("Aggiungi Articolo", "Create")
-    </p>
-
-
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Img)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prezzo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ingredienti)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Img)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Prezzo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ingredienti)
-                </td>
-                <td>
-
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Articolo_ID })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Articolo_ID })
-                    @Html.ActionLink("Details", "Details", new { id = item.Articolo_ID })
-
-                </td>
-            </tr>
-
-
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/bootstrap.min.css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <style>
+        .card {
+            height: 100%;
         }
 
-    </table>
-}
-else
-{
-    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-4">
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
 
 
-        @foreach (var item in Model)
-        {
-            <div class="col">
+    @if (User.IsInRole("Amministratore"))
+    {
+        <div class="d-flex justify-content-between my-3">
+            <h2 class="text-center mb-4 pacifico-regular fs-3">Pizze</h2>
+            <div class="text-center pacifico-regular">
+                @Html.ActionLink("Aggiungi Articolo", "Create", null, new { @class = "btn btn-primary btn-lg pacifico-regular" })
+            </div>
+        </div>
 
-
-                <div class="card">
-                    <img src=@item.Img class="card-img-top" alt="@item.Nome">
-                    <div class="card-body">
-                        <h5 class="card-title">@item.Nome</h5>
-                        <p class="card-text">@item.Prezzo €</p>
-                        <p class="card-text">@item.Ingredienti</p>
-                        @using (Html.BeginForm("AddToCart", "OrdArts", new { id = item.Articolo_ID }, FormMethod.Post))
-                        {
-                            <input class="btn btn-success rounded-pill" type="submit" value="Aggiungi all'ordine" />
-                        }
+        <div class="row mt-4 pacifico-regular">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card">
+                        <img src="@item.Img" class="card-img-top" alt="@item.Nome">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center">
+                                <h5 class="card-title fw-bolder fs-1">@item.Nome</h5>
+                            </div>
+                            <div class="d-flex justify-content-center fs-5">
+                                <p class="card-text">@Html.DisplayFor(modelItem => item.Ingredienti)</p>
+                            </div>
+                            <div class="d-flex justify-content-center my-2 fw-bold fs-3">
+                                <p class="card-text">@Html.DisplayFor(modelItem => item.Prezzo) €</p>
+                            </div>
+                            <div class="btn-group d-flex justify-content-center" role="group" aria-label="Actions">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Articolo_ID }, new { @class = "btn btn-info mx-1" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Articolo_ID }, new { @class = "btn btn-danger mx-1" })
+                                @Html.ActionLink("Details", "Details", new { id = item.Articolo_ID }, new { @class = "btn btn-secondary mx-1" })
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-        }
-    </div>
-}
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 mt-4 pacifico-regular">
+            @foreach (var item in Model)
+            {
+                <div class="col mb-4">
+                    <div class="card">
+                        <img src="@item.Img" class="card-img-top" alt="@item.Nome">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center">
+                                <h5 class="card-title fw-bolder fs-1">@item.Nome</h5>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <p class="card-text fs-5">@item.Ingredienti</p>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <p class="card-text my-2 fw-bold fs-3">@item.Prezzo €</p>
+                            </div>
+                            <div class="mt-auto d-flex justify-content-center">
+                                @using (Html.BeginForm("AddToCart", "OrdArts", new { id = item.Articolo_ID }, FormMethod.Post))
+                                {
+                                    <input class="btn btn-success rounded-pill" type="submit" value="Aggiungi all'ordine" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</body>
+</html>

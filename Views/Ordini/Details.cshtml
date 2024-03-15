@@ -1,43 +1,33 @@
-﻿@model List<Pizzeria.Models.Ordini>
+﻿
+
+@model List<Pizzeria.Models.Ordini>
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2 class="pacifico-regular fs-2">Storico dei tuoi ordini</h2>
 
-@foreach (var order in Model)
-{
-    <div>
-        <hr />
-        <h4>Ordine:  @Html.DisplayFor(model => order.Ordine_ID)</h4>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => order.Users.Nome)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => order.Users.Nome)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => order.Indirizzo)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => order.Indirizzo)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => order.Note)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => order.Note)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => order.CostoCons)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => order.CostoCons)
-            </dd>
-        </dl>
-    </div>
-    <a href="/OrdArts/Details/@order.Ordine_ID">DETTAGLI </a>
-
-}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 mt-4 pacifico-regular">
+    @foreach (var order in Model)
+    {
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Ordine: @order.Ordine_ID</h5>
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => order.Users.Nome)</dt>
+                        <dd>@Html.DisplayFor(model => order.Users.Nome)</dd>
+                        <dt>@Html.DisplayNameFor(model => order.Indirizzo)</dt>
+                        <dd>@Html.DisplayFor(model => order.Indirizzo)</dd>
+                        <dt>@Html.DisplayNameFor(model => order.Note)</dt>
+                        <dd>@Html.DisplayFor(model => order.Note)</dd>
+                        <dt>@Html.DisplayNameFor(model => order.CostoCons)</dt>
+                        <dd>@Html.DisplayFor(model => order.CostoCons)</dd>
+                    </dl>
+                    <a href="/OrdArts/Details/@order.Ordine_ID" class="btn btn-primary">Dettagli</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

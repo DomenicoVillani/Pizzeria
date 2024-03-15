@@ -1,60 +1,88 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title - Applicazione ASP.NET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-***" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="~/Stile/Layout.css" rel="stylesheet" />
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm nav-bg-color">
         <div class="container">
-            @Html.ActionLink("Pizzeria", "Index", "Articoli", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
+
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <img src="https://th.bing.com/th/id/OIG1.cT1wGjVgyYDYpV6XX.Lt?w=1024&h=1024&rs=1&pid=ImgDetMain" alt="Logo" class="navbar-logo rounded-circle" width="50" height="50" />
+            </a>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <p class="text-white pacifico-regular">Pizzeria Sale e Pepe</p>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+                <ul class="navbar-nav">
                     @if (User.IsInRole("Amministratore"))
                     {
-                        <li>@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Pizze", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
+                        <li class="nav-item">@Html.ActionLink("Articoli", "Index", "Articoli", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
                     }
                     else if (User.IsInRole("Cliente"))
                     {
-                        <li>@Html.ActionLink("Lista pizze", "Index", "Articoli", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("🛒Carrello🛒", "Cart", "OrdArts", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("I tuoi ordini", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Il tuo ordine", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link text-white pacifico-regular" })</li>
+                        <li class="nav-item">@Html.ActionLink("🛒", "Cart", "OrdArts", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
                     }
                 </ul>
-                @if (User.IsInRole("Amministratore"))
-                {
-                    <p class="text-bg-warning">🏆🏆AMMINISTRATORE🏆🏆</p>
-                }
-                <ul class="navbar-nav flex-grow-1">
+                <ul class="navbar-nav ml-auto">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Logout", "Logout", "Auth", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item"><a href="@Url.Action("Logout", "Auth")" class="btn btn-outline-light pacifico-regular">Logout</a></li>
                     }
                     else
                     {
-                        <li>@Html.ActionLink("Login", "Login", "Auth", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item"><a href="@Url.Action("Login", "Auth")" class="btn btn-outline-light pacifico-regular">Login</a></li>
                     }
-
                 </ul>
             </div>
         </div>
     </nav>
+    s
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Applicazione ASP.NET</p>
+            <div class="container pacifico-regular">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Contatti</h5>
+                        <p>Via Sale e Pepe, 420</p>
+                        <p><a href="tel:+391111111111" class="text-reset text-decoration-none">Telefono: +391111111111</a></p>
+                        <p><a href="mailto:PizzeriaSaleEPepe@saleEPepe.com" class="text-reset text-decoration-none">Email: PizzeriaSaleEPepe@saleEPepe.com</a></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Orari di apertura</h5>
+                        <p>Lunedì - Venerdì: 12:00 - 22:30</p>
+                        <p>Sabato - Domenica: 11:00 - 00:00</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5><a href="@Url.Action("Index", "ChiSiamo")" class="text-reset text-decoration-none">Chi siamo</a></h5>
+                    </div>
+                </div>
+                <hr class="bg-white" />
+                <div class="text-center">
+                    <p>&copy; @DateTime.Now.Year - Pizzeria Sale e Pepe</p>
+                </div>
+            </div>
         </footer>
+
     </div>
 
     @Scripts.Render("~/bundles/jquery")

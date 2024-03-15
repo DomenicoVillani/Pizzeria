@@ -10,5 +10,6 @@ namespace Pizzeria.Models
         public Articoli Articolo { get; set; }
         public int Quantita { get; set; }
         public int User_Id { get; set;}
+        public Users User { get; set; }
     }
 }

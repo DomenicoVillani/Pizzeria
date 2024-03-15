@@ -1,27 +1,49 @@
-﻿@model Pizzeria.Models.OrdArt
+﻿﻿@model Pizzeria.Models.OrdArt
 
-<h2>Carrello</h2>
+<h2 class="pacifico-regular">Carrello</h2>
 @if (ViewBag.UserCart != null && ViewBag.UserCart.Count > 0)
 {
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between pacifico-regular">
         <div>
             <table>
                 <tr>
                     <th>Nome</th>
                     <th>Prezzo</th>
                     <th>Quantità</th>
+                    <th>Rimuovi</th>
                 </tr>
                 @foreach (var item in ViewBag.UserCart)
                 {
                     <tr>
                         <td>@item.Articolo.Nome</td>
                         <td>@item.Articolo.Prezzo €</td>
-                        <td>@item.Quantita</td>
+                        <td>
+                            @using (Html.BeginForm("AggiornaQuantita", "OrdArts", FormMethod.Post))
+                            {
+                                <input type="hidden" name="articoloId" value="@item.Articolo.Articolo_ID" />
+                                <button type="submit" name="operazione" value="incrementa" class="btn btn-outline-primary">+</button>
+                                <span>@item.Quantita</span>
+                                <button type="submit" name="operazione" value="decrementa" class="btn btn-outline-primary">-</button>
+                            }
+                        </td>
+                        <td>
+                            @using (Html.BeginForm("RimuoviDallCarrello", "OrdArts", FormMethod.Post))
+                            {
+                                <input type="hidden" name="articoloId" value="@item.Articolo.Articolo_ID" />
+                                <input type="submit" value="Elimina" class="btn btn-outline-danger" />
+                            }
+                        </td>
                     </tr>
                 }
             </table>
+            <div class="pacifico-regular">
+                @using (Html.BeginForm("SvuotaCarrello", "OrdArts", FormMethod.Post))
+                {
+                    <input type="submit" value="Svuota Carrello" class="btn btn-outline-danger" />
+                }
+            </div>
         </div>
-        <div>
+        <div class="pacifico-regular">
             @using (Html.BeginForm("CreateOrderFromCart", "OrdArts", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
@@ -46,6 +68,8 @@
                         </div>
                     </div>
 
+
+
                     <div class="form-group my-2">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="Conferma Ordine" class="btn btn-outline-success" />
@@ -58,5 +82,5 @@
 }
 else
 {
-    <p>Il carrello è vuoto</p>
+    <p class="pacifico-regular">Il carrello è vuoto</p>
 }

@@ -11,12 +11,13 @@ namespace Pizzeria.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
-            if (User.IsInRole("Aministratore"))
+            if (User.IsInRole("Amministratore"))
             {
-                return RedirectToAction("Index", "Ordini");
+
+                return RedirectToAction("Index", "Articoli");
             }
 
-            return View();
+            return RedirectToAction("Index", "Articoli");
         }
     }
 }

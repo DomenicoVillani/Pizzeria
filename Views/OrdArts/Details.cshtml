@@ -1,28 +1,31 @@
-﻿@model List<Pizzeria.Models.OrdArt>
+﻿﻿@model List<Pizzeria.Models.OrdArt>
 
 @{
     ViewBag.Title = "Dettagli Ordine";
 }
 
-<h2>Dettagli Ordine</h2>
+<h2 class="pacifico-regular">Dettagli Ordine</h2>
 
+<div class="pacifico-regular">
+    <p><strong>Nome:</strong> @Model[0].Ordini.Users.Nome</p>
+    <p><strong>Cognome:</strong> @Model[0].Ordini.Users.Cognome</p>
+    <p><strong>Indirizzo:</strong> @Model[0].Ordini.Indirizzo</p>
+    <p><strong>Note:</strong> @Model[0].Ordini.Note</p>
+    <p><strong>Costo Consegna:</strong> @Model[0].Ordini.CostoCons</p>
+</div>
 
-<p><strong>Nome:</strong> @Model[0].Ordini.Users.Nome</p>
-<p><strong>Cognome:</strong> @Model[0].Ordini.Users.Cognome</p>
-<p><strong>Indirizzo:</strong> @Model[0].Ordini.Indirizzo</p>
-<p><strong>Note:</strong> @Model[0].Ordini.Note</p>
-<p><strong>Costo Consegna:</strong> @Model[0].Ordini.CostoCons</p>
 
 
 
 @if (Model.Any())
 {
-    <table class="table">
+    <table class="table pacifico-regular">
         <thead>
             <tr>
                 <th>Articolo</th>
                 <th>Quantità</th>
                 <th>Prezzo</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +35,7 @@
                     <td>@item.Articoli.Nome</td>
                     <td>@item.Quantita</td>
                     <td>@item.Articoli.Prezzo</td>
+                    <td><a href="/OrdArts/Edit/@item.Articolo_ID/@item.Ordine_ID" class="btn btn-success">Edit</a></td>
                 </tr>
             }
             <tr>
@@ -41,6 +45,7 @@
                 <td>
                     @(Model.Sum(item => (item.Articoli.Prezzo * item.Quantita)) + Model.FirstOrDefault().Ordini.CostoCons)
                 </td>
+                <td></td>
 
 
             </tr>

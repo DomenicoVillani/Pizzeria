@@ -4,56 +4,33 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Dettagli</h2>
+<h2 class="pacifico-regular">Dettagli</h2>
 
-<div>
-    <h4>Articoli</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Img)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Img)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Prezzo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Prezzo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Tempo_Cons)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Tempo_Cons)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Ingredienti)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Ingredienti)
-        </dd>
-
-    </dl>
+<div class="card mb-3 mt-3 pacifico-regular">
+    <div class="row no-gutters">
+        <div class="col-md-4">
+            <img src="@Model.Img" class="card-img" alt="@Model.Nome">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h4 class="card-title">Articoli</h4>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.Nome)</dt>
+                    <dd>@Html.DisplayFor(model => model.Nome)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.Prezzo)</dt>
+                    <dd>@Html.DisplayFor(model => model.Prezzo)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.Tempo_Cons)</dt>
+                    <dd>@Html.DisplayFor(model => model.Tempo_Cons)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.Ingredienti)</dt>
+                    <dd>@Html.DisplayFor(model => model.Ingredienti)</dd>
+                </dl>
+                @if (User.IsInRole("Amministratore"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Articolo_ID }, new { @class = "btn btn-primary" })
+                }
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
 </div>
-@if (User.IsInRole("Amministratore"))
-{
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Articolo_ID })
-}
-<p>@Html.ActionLink("Back to List", "Index")</p>

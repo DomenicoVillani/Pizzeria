@@ -24,54 +24,68 @@ namespace Pizzeria.Controllers
         }
 
         // GET: Ordini/Details/5
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Cliente, Amministratore")]
         public ActionResult Details(int? id)
         {
-            var idInt = Convert.ToInt32(id);
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var ordini = db.Ordini
-                .Where(o => o.User_ID == idInt).ToList();
-            if (ordini == null)
+            var idInt = Convert.ToInt32(id);
+            var order = db.Ordini
+                        .Where(o => o.User_ID == idInt).ToList();
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            return View(ordini);
+            return View(order);
         }
 
         // GET: Ordini/Create
-        [Authorize(Roles = "Cliente , Amministratore")]
+        [Authorize(Roles = "Cliente, Amministratore")]
         public ActionResult Create()
         {
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome");
+            if (User.IsInRole("Cliente"))
+            {
+                ViewBag.User_ID = User.Identity.Name; ;
+            }
+            else if (User.IsInRole("Amministratore"))
+            {
+                ViewBag.UserID = new SelectList(db.Users, "User_ID", "Nome");
+            }
             return View();
         }
 
         // POST: Ordini/Create
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
-        [Authorize(Roles = "Cliente,Amministratore")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        public ActionResult Create(OrdArt ordArt)
         {
             if (ModelState.IsValid)
             {
-                if (User.IsInRole("Cliente"))
-                {
-                    ordini.CostoCons = 4;
-                    ordini.User_ID = Convert.ToInt32(User.Identity.Name);
-                }
-                db.Ordini.Add(ordini);
+                // Salva l'ordine nella tabella Ordini
+                db.Ordini.Add(ordArt.Ordini);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Articoli");
+
+                // Ottieni l'Ordine_ID appena creato
+                int newOrdineID = ordArt.Ordini.Ordine_ID;
+
+                // Assegna l'Ordine_ID appena creato al record della tabella OrdArt
+                ordArt.Ordine_ID = newOrdineID;
+
+                // Aggiungi il record della tabella OrdArt
+                db.OrdArt.Add(ordArt);
+                db.SaveChanges();
+
+                return RedirectToAction("Details", "OrdArts", new { id = newOrdineID });
             }
 
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
-            return View(ordini);
+            return View(ordArt);
         }
+
 
         // GET: Ordini/Edit/5
         [Authorize(Roles = "Amministratore")]
@@ -93,7 +107,6 @@ namespace Pizzeria.Controllers
         // POST: Ordini/Edit/5
         // Per la protezione da attacchi di overposting, abilitare le proprietà a cui eseguire il binding. 
         // Per altri dettagli, vedere https://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Amministratore")]
@@ -126,9 +139,9 @@ namespace Pizzeria.Controllers
         }
 
         // POST: Ordini/Delete/5
-        [Authorize(Roles = "Amministratore")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Amministratore")]
         public ActionResult DeleteConfirmed(int id)
         {
             Ordini ordini = db.Ordini.Find(id);
