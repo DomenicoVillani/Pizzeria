@@ -236,6 +236,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Stile\ArticoliIndex.css" />
+    <Content Include="Stile\img\image.png" />
     <Content Include="Stile\img\photo_2024-03-14_11-40-31.jpg" />
     <Content Include="Stile\Layout.css" />
     <Content Include="Web.config" />
@@ -276,6 +277,7 @@
     <Content Include="Views\OrdArts\AddToCart.cshtml" />
     <Content Include="Views\ChiSiamo\Index.cshtml" />
     <Content Include="Views\Admin\TotaleIncassato.cshtml" />
+    <Content Include="Views\Admin\OrdiniEvasi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

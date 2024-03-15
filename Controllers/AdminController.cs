@@ -25,10 +25,26 @@ namespace Pizzeria.Controllers
         private DBContext db = new DBContext();
 
         [HttpGet]
+        public ActionResult OrdiniEvasi()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public JsonResult GetOrdiniEvasi()
         {
             var order = db.Ordini
-               .Where(o => o.Stato == "Evaso").ToList();
+               .Where(o => o.Stato == "Evaso").Select(o => new OrdineDTO
+               {
+                   Ordine_ID = o.Ordine_ID,
+                   Indirizzo = o.Indirizzo,
+                   Note = o.Note,
+                   Data = o.Data,
+                   Stato = o.Stato,
+                   Totale = o.Totale,
+                   CostoCons = o.CostoCons,
+                   User_ID = o.User_ID
+               }).ToList();
 
             return Json(order, JsonRequestBehavior.AllowGet);
         }

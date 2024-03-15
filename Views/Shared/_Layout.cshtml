@@ -35,6 +35,7 @@
                         <li class="nav-item">@Html.ActionLink("Articoli", "Index", "Articoli", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
                         <li class="nav-item">@Html.ActionLink("Ordini", "Index", "Ordini", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
                         <li class="nav-item">@Html.ActionLink("Totale incassato per giorni", "TotaleIncassato", "Admin", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
+                        <li class="nav-item">@Html.ActionLink("Totale ordini evasi", "OrdiniEvasi", "Admin", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
                     }
                     else if (User.IsInRole("Cliente"))
                     {
