@@ -25,6 +25,18 @@ namespace Pizzeria.Models
         [StringLength(250)]
         public string Note { get; set; }
 
+
+        [DataType(DataType.DateTime)]
+        public DateTime? Data { get; set; }
+
+
+        [StringLength(50)]
+        public string Stato { get; set; }
+
+
+        public decimal? Totale { get; set; }
+
+
         public decimal? CostoCons { get; set; }
 
         public int User_ID { get; set; }

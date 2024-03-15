@@ -197,45 +197,48 @@ namespace Pizzeria.Controllers
         [HttpPost]
         [Authorize(Roles = "Cliente")]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrderFromCart(OrdArt ordArt)
+        public ActionResult CreateOrderFromCart(Ordini ordArt)
         {
+
             if (ModelState.IsValid)
             {
-                ordArt.Ordini.CostoCons = 4;
-                ordArt.Ordini.User_ID = Convert.ToInt32(User.Identity.Name);
-                db.Ordini.Add(ordArt.Ordini);
-                db.SaveChanges();
 
-                int newOrdineID = ordArt.Ordini.Ordine_ID;
+                ordArt.CostoCons = 4;
+                ordArt.User_ID = Convert.ToInt32(User.Identity.Name);
 
-                List<ArtCart> userArtCart = new List<ArtCart>();
+                var cartJson = HttpUtility.UrlDecode(Request.Cookies["Carrello" + User.Identity.Name]["User"]);
+                var userId = Convert.ToInt32(User.Identity.Name);
 
-                // Verifica se il cookie "Carrello" esiste già
-                if (Request.Cookies["Carrello" + User.Identity.Name] != null && Request.Cookies["Carrello" + User.Identity.Name]["User"] != null)
-                {
-                    var cartJson = HttpUtility.UrlDecode(Request.Cookies["Carrello" + User.Identity.Name]["User"]);
-                    var userId = Convert.ToInt32(User.Identity.Name);
+                var artsCart = JsonConvert.DeserializeObject<List<ArtCart>>(cartJson);
+                var userArtCart = artsCart.Where(a => a.User_Id == userId).ToList();
 
-                    // Decodifica il valore del cookie e riempie la lista
-                    var artsCart = JsonConvert.DeserializeObject<List<ArtCart>>(cartJson);
-
-                    // Filtra solo gli articoli relativi all'utente attuale
-                    userArtCart = artsCart.Where(a => a.User_Id == userId).ToList();
-                    ViewBag.UserCart = userArtCart;
-                }
+                decimal totale = 0;
 
                 foreach (var art in userArtCart)
                 {
-                    var newOrdArt = new OrdArt();  // Create a new instance of OrdArt for each ArtCart item
+                    totale += (art.Quantita * art.Articolo.Prezzo);
+                }
+                ordArt.Totale = totale;
+
+                ordArt.Stato = "Preparazione";
+                ordArt.Data = DateTime.Today;
+
+                db.Ordini.Add(ordArt);
+                db.SaveChanges();
+
+                int newOrdineID = ordArt.Ordine_ID;
+
+                foreach (var art in userArtCart)
+                {
+                    var newOrdArt = new OrdArt();
                     newOrdArt.Articolo_ID = art.Articolo.Articolo_ID;
                     newOrdArt.Ordine_ID = newOrdineID;
                     newOrdArt.Quantita = Convert.ToInt32(art.Quantita);
-                    db.OrdArt.Add(newOrdArt);  // Add the new instance to the database context
+                    db.OrdArt.Add(newOrdArt);
                 }
 
                 db.SaveChanges();
 
-                // Rimuovi il cookie del carrello per l'utente corrente
                 HttpCookie userCookie = Request.Cookies["Carrello" + User.Identity.Name];
                 if (userCookie != null)
                 {
@@ -244,10 +247,22 @@ namespace Pizzeria.Controllers
                 }
 
                 return RedirectToAction("Details", "OrdArts", new { id = newOrdineID });
-            }
-            return RedirectToAction("Cart");
-        }
 
+            }
+            else
+            {
+                // Se il modello non Ã¨ valido, visualizza gli errori di validazione
+                foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    // Puoi fare qualcosa con gli errori di validazione, ad esempio stamparli nel log o visualizzarli nell'interfaccia utente
+                    // Esempio di stampa nel log:
+                    System.Diagnostics.Debug.WriteLine(modelError.ErrorMessage);
+                }
+
+                // Puoi gestire gli errori di validazione qui, ad esempio restituendo la vista con un messaggio di errore
+                return RedirectToAction("Cart");
+            }
+        }
         [HttpPost]
         [Authorize(Roles = "Cliente")]
         public ActionResult SvuotaCarrello()

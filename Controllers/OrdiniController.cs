@@ -110,7 +110,7 @@ namespace Pizzeria.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Amministratore")]
-        public ActionResult Edit([Bind(Include = "Ordine_ID,Indirizzo,Note,CostoCons,User_ID")] Ordini ordini)
+        public ActionResult Edit([Bind(Include = "Ordine_ID,Indirizzo,Note,Data,Stato,Totale,CostoCons,User_ID")] Ordini ordini)
         {
             if (ModelState.IsValid)
             {
@@ -118,7 +118,6 @@ namespace Pizzeria.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.User_ID = new SelectList(db.Users, "User_ID", "Nome", ordini.User_ID);
             return View(ordini);
         }
 

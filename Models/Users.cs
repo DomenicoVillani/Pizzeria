@@ -31,6 +31,7 @@ namespace Pizzeria.Models
 
         [Required]
         [StringLength(255)]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [StringLength(50)]
