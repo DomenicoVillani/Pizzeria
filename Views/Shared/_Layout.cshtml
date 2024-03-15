@@ -39,7 +39,7 @@
                     }
                     else if (User.IsInRole("Cliente"))
                     {
-                        <li class="nav-item">@Html.ActionLink("Il tuo ordine", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link text-white pacifico-regular" })</li>
+                        <li class="nav-item">@Html.ActionLink("I tuoi ordini!", "Details", "Ordini", new { id = User.Identity.Name }, new { @class = "nav-link text-white pacifico-regular" })</li>
                         <li class="nav-item">@Html.ActionLink("🛒", "Cart", "OrdArts", new { area = "" }, new { @class = "nav-link text-white pacifico-regular" })</li>
                     }
                 </ul>
